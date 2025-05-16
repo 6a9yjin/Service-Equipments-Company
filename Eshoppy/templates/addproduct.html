@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 650px;
+            margin-top: 60px;
+            background-color: #1c1c1c;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 153, 0, 0.2);
+            animation: fadeInUp 0.6s ease-in-out;
+        }
+
+        h2 {
+            color: #FFA500;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            margin-bottom: 6px;
+            color: #f0f0f0;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        select {
+            background-color: #2b2b2b;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        input:focus, select:focus {
+            border-color: #FFA500;
+            box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
+        }
+
+        .btn-orange {
+            background-color: #FFA500;
+            color: black;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-orange:hover {
+            background-color: #ff8800;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add Product</h2>
+
+    <div class="d-flex justify-content-between mb-4">
+        <a href="{% url 'productlist' %}" class="btn btn-orange">← Product List</a>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-orange">Home</a>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" name="Name" id="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Category:</label>
+            <select name="Category" id="category" class="form-select" required>
+                <option value="">Select Category</option>
+                <option value="electronics">Electronics</option>
+                <option value="clothing">Clothing</option>
+                <option value="books">Books</option>
+                <option value="furniture">Furniture</option>
+                <option value="food">Food</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="photo" class="form-label">Photo:</label>
+            <input type="file" name="Photo" id="photo" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Price:</label>
+            <input type="number" name="Price" id="price" step="0.01" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Quantity" class="form-label">Quantity:</label>
+            <input type="number" name="Quantity" id="Quantity" step="0.01" class="form-control" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="availability" class="form-label">Availability:</label>
+            <select name="Availability" id="availability" class="form-select">
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-orange w-100">Add Product</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

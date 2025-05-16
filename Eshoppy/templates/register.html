@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('https://images.seeklogo.com/logo-png/46/1/southeastern-conference-texas-colors-logo-png_seeklogo-463100.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .register-container {
+            max-width: 500px;
+            margin: 80px auto;
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 153, 0, 0.4);
+        }
+
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffa726;
+        }
+
+        .form-control,
+        .form-select,
+        textarea {
+            background-color: #1e1e1e;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: #ffa726;
+            box-shadow: 0 0 5px rgba(255, 153, 0, 0.6);
+        }
+
+        .btn-custom {
+            background-color: #ffa726;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #ffb74d;
+        }
+
+        .validation-icon {
+            background-color: #1e1e1e;
+            border-left: 0;
+            border-top: 1px solid #555;
+            border-bottom: 1px solid #555;
+            color: white;
+        }
+
+        .error {
+            color: #ff6b6b;
+            font-size: 14px;
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: #ffa726;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            color: #ffb74d;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h2>Register</h2>
+    {% if errors %}
+    <ul class="error">
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form method="POST" onsubmit="return validateForm(event)">
+        {% csrf_token %}
+
+        <!-- Name -->
+        <div class="mb-3">
+            <label for="Name" class="form-label">Name:</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" id="Name" name="Name" class="form-control" required pattern="[A-Za-z\s]+"
+                       oninput="validateName()" title="Only letters and spaces allowed">
+                <span class="input-group-text validation-icon" id="iconName"></span>
+                <div class="invalid-feedback">Only letters and spaces allowed.</div>
+                <div class="valid-feedback">Looks good!</div>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email:</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input type="email" id="Email" name="Email" class="form-control" required
+                       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net)" oninput="validateEmail()">
+                <span class="input-group-text validation-icon" id="iconEmail"></span>
+                <div class="invalid-feedback">Enter a valid email (e.g., user@mail.com).</div>
+                <div class="valid-feedback">Email looks good!</div>
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+            <label for="Phone" class="form-label">Phone Number:</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                <input type="text" name="Phone" id="Phone" class="form-control" maxlength="10" required
+                       pattern="\d{10}" oninput="validatePhone()" title="Enter exactly 10 digits">
+                <span class="input-group-text validation-icon" id="iconPhone"></span>
+                <div class="invalid-feedback">Enter exactly 10 digits.</div>
+                <div class="valid-feedback">Phone looks good!</div>
+            </div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password:</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input type="password" name="Password" id="Password" class="form-control" required minlength="6"
+                       oninput="validatePassword()">
+                <span class="input-group-text validation-icon" id="iconPassword"></span>
+                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                <div class="valid-feedback">Password looks strong!</div>
+            </div>
+            <div class="form-check mt-2">
+                <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePassword()">
+                <label class="form-check-label" for="showPassword">Show Password</label>
+            </div>
+        </div>
+
+        <!-- Age -->
+        <div class="mb-3">
+            <label for="Age" class="form-label">Age:</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                <input type="number" name="Age" id="Age" class="form-control" required min="13" max="120">
+            </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+            <label for="Gender" class="form-label">Gender:</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                <select name="Gender" id="Gender" class="form-select" required>
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3">
+            <label for="Address" class="form-label">Address:</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                <textarea name="Address" id="Address" class="form-control" rows="4" required minlength="10"
+                          maxlength="70" title="10 to 70 characters" oninput="validateAddress()"></textarea>
+                <span class="input-group-text validation-icon" id="iconAddress"></span>
+                <div class="invalid-feedback">Address must be 10–70 characters.</div>
+                <div class="valid-feedback">Address looks good!</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-custom w-100">Register</button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+        <p>Already have an account? <a href="/login/">Login here</a></p>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function togglePassword() {
+        const passwordField = document.getElementById("Password");
+        passwordField.type = passwordField.type === "password" ? "text" : "password";
+    }
+
+    function applyValidationStyle(element, isValid, iconId) {
+        const icon = document.getElementById(iconId);
+        if (isValid) {
+            element.classList.remove("is-invalid");
+            element.classList.add("is-valid");
+            icon.innerHTML = '<i class="fas fa-check text-success"></i>';
+        } else {
+            element.classList.remove("is-valid");
+            element.classList.add("is-invalid");
+            icon.innerHTML = '<i class="fas fa-times text-danger"></i>';
+        }
+    }
+
+    function validateName() {
+        const field = document.getElementById("Name");
+        const pattern = /^[A-Za-z\s]+$/;
+        applyValidationStyle(field, pattern.test(field.value), "iconName");
+    }
+
+    function validateEmail() {
+        const field = document.getElementById("Email");
+        const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net)$/;
+        applyValidationStyle(field, pattern.test(field.value), "iconEmail");
+    }
+
+    function validatePhone() {
+        const field = document.getElementById("Phone");
+        const pattern = /^\d{10}$/;
+        applyValidationStyle(field, pattern.test(field.value), "iconPhone");
+    }
+
+    function validatePassword() {
+        const field = document.getElementById("Password");
+        applyValidationStyle(field, field.value.length >= 6, "iconPassword");
+    }
+
+    function validateAddress() {
+        const field = document.getElementById("Address");
+        const length = field.value.trim().length;
+        applyValidationStyle(field, length >= 10 && length <= 70, "iconAddress");
+    }
+
+    function validateForm(event) {
+        const nameValid = document.getElementById("Name").classList.contains("is-valid");
+        const emailValid = document.getElementById("Email").classList.contains("is-valid");
+        const phoneValid = document.getElementById("Phone").classList.contains("is-valid");
+        const passwordValid = document.getElementById("Password").classList.contains("is-valid");
+        const addressValid = document.getElementById("Address").classList.contains("is-valid");
+
+        if (!nameValid || !emailValid || !phoneValid || !passwordValid || !addressValid) {
+            event.preventDefault();
+            alert("Please fill out all fields correctly.");
+            return false;
+        }
+        return true;
+    }
+</script>
+</body>
+</html>

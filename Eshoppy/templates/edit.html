@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('https://images.seeklogo.com/logo-png/46/1/southeastern-conference-texas-colors-logo-png_seeklogo-463100.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #E0E0E0; /* Light gray text */
+            transition: background-color 0.5s ease;
+        }
+
+        .edit-container {
+            width: 500px;
+            margin: 80px auto;
+            background-color: rgba(18, 18, 18, 0.85); /* Dark background with slight transparency */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #FF9800; /* Orange color for the title */
+            font-size: 28px;
+            animation: colorChange 3s infinite alternate; /* Title color animation */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 16px;
+            color: #E0E0E0; /* Light gray text */
+            transition: color 0.3s ease;
+        }
+
+        /* Input Fields */
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #444; /* Darker border */
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #333; /* Dark background for inputs */
+            color: #E0E0E0; /* Light text inside inputs */
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Textarea */
+        textarea {
+            resize: none;
+        }
+
+        /* Button styling */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF9800; /* Orange button */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Button Hover Effect */
+        button:hover {
+            background-color: #FF5722; /* Darker orange when hovered */
+            transform: scale(1.05);
+        }
+
+        /* Focus effect for input fields */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            background-color: #444; /* Slightly lighter dark background */
+            border-color: #FF9800; /* Orange border on focus */
+        }
+
+        /* Title color animation */
+        @keyframes colorChange {
+            0% { color: #FF9800; }
+            50% { color: #FF5722; }
+            100% { color: #FF4500; }
+        }
+
+        /* Fade-in effect */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <h2>Edit Profile</h2>
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="Name">Name:</label>
+            <input type="text" name="Name" id="Name" value="{{ user.name }}" required>
+
+            <label for="Phone">Phone:</label>
+            <input type="number" name="Phone" id="Phone" value="{{ user.phone }}" required>
+
+            <label for="Age">Age:</label>
+            <input type="number" name="Age" id="Age" value="{{ user.age }}" required>
+
+            <label for="Gender">Gender:</label>
+            <select name="Gender" id="Gender" required>
+                <option value="Male" {% if user.gender == "Male" %}selected{% endif %}>Male</option>
+                <option value="Female" {% if user.gender == "Female" %}selected{% endif %}>Female</option>
+            </select>
+
+            <label for="Address">Address:</label>
+            <textarea name="Address" id="Address" rows="4" required>{{ user.address }}</textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
